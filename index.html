@@ -3,108 +3,793 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>試吃點心團</title>
+    <title>喬伊絲手工甜品 & 香港淳珍伴手禮 聯合團購</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#fffaf5',
+                            100: '#fef3e7',
+                            200: '#fce4ce',
+                            500: '#e07a5f',
+                            600: '#d15e41',
+                            700: '#b44329',
+                            800: '#782d1c',
+                            900: '#471b10',
+                        },
+                        warm: {
+                            50: '#faf8f5',
+                            100: '#f3efe6',
+                            200: '#e5dccb',
+                            800: '#5c4d3c',
+                            900: '#382f24'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary-cheese: #FFE082;
-            --primary-dark: #FFB300;
-            --accent-brown: #6D4C41;
-            --bg-cream: #FFFDE7;
-        }
-
         body {
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
-            background: linear-gradient(135deg, #FFF9C4, #FFE0B2);
-            color: var(--accent-brown);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
+            background-color: #fcf8f3;
+            font-family: 'Noto Sans TC', sans-serif;
         }
-
-        .card {
-            background: #FFFFFF;
-            padding: 40px 30px;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(255, 179, 0, 0.25);
-            border: 4px dashed #FFB300;
-            max-width: 450px;
-            width: 90%;
-            position: relative;
-            overflow: hidden;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(243, 239, 230, 0.8);
         }
-
-        .emoji-icon {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            animation: bounce 2s infinite;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
         }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-15px);}
-            60% {transform: translateY(-7px);}
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
         }
-
-        h1 {
-            color: #5D4037;
-            font-size: 2rem;
-            margin: 10px 0;
-        }
-
-        .divider {
-            width: 60px;
-            height: 4px;
-            background-color: #FFD54F;
-            margin: 20px auto;
-            border-radius: 2px;
-        }
-
-        p {
-            font-size: 1.2rem;
-            color: #795548;
-            line-height: 1.6;
-            margin: 15px 0;
-            font-weight: bold;
-        }
-
-        .coming-soon {
-            display: inline-block;
-            background-color: #FFF8E1;
-            color: #E65100;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 1.1rem;
-            border: 2px solid #FFE082;
-            margin-top: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            letter-spacing: 2px;
-        }
-
-        .footer-note {
-            margin-top: 30px;
-            font-size: 0.85rem;
-            color: #A1887F;
+        ::-webkit-scrollbar-thumb {
+            background: #d15e41;
+            border-radius: 4px;
         }
     </style>
 </head>
-<body>
+<body class="text-warm-900 min-h-screen pb-12">
 
-    <div class="card">
-        <div class="emoji-icon">🧀🏃💨</div>
-        <h1>試吃點心團</h1>
-        <div class="divider"></div>
-        <p>這次不小心錯過啦～<br>不過美味的腳步不會停歇！</p>
-        <div>
-            <span class="coming-soon">擇日開張 · 敬請期待 ~~~~ ✨</span>
-        </div>
-        <div class="footer-note">
-            找不到夏天 💛
-        </div>
-    </div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
 
+    <!-- Header / Banner Section -->
+    <header class="bg-gradient-to-r from-brand-700 via-brand-600 to-amber-700 text-white shadow-lg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="max-w-5xl mx-auto px-4 py-8 relative z-10 text-center">
+            <span class="inline-block px-3 py-1 bg-amber-400 text-brand-900 font-bold text-xs uppercase tracking-wider rounded-full mb-3 shadow">超人氣限時預購</span>
+            <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-2">喬伊絲手工甜品 × 香港淳珍伴手禮</h1>
+            <p class="text-amber-100 text-sm md:text-base font-medium max-w-2xl mx-auto">嚴選美味蛋糕甜品與過年熱銷酥脆伴手禮，團購限時優惠特價中！</p>
+            
+            <!-- Countdown Timer Box -->
+            <div class="mt-6 inline-flex flex-col sm:flex-row items-center gap-3 bg-black/25 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20">
+                <div class="flex items-center gap-2 text-amber-300 font-semibold text-sm sm:text-base">
+                    <i class="fa-regular font-bold fa-clock text-lg"></i>
+                    <span>截止時間：11月19日 下午 03:00</span>
+                </div>
+                <div id="countdown" class="font-mono font-bold text-amber-200 text-base bg-brand-900/40 px-3 py-1 rounded-lg">
+                    計算剩餘時間...
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 mt-8 space-y-10">
+
+        <!-- Section 1: Product Selection & Order Form -->
+        <section class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-warm-200">
+            <div class="flex items-center justify-between border-b border-warm-200 pb-4 mb-6">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-bold text-brand-800 flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-brand-500"></i>
+                        選擇商品與填寫訂單
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-1">請選擇欲購買數量，填妥名字後點擊下方按鈕送出</p>
+                </div>
+                <span class="text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full font-medium">即時計算總金額</span>
+            </div>
+
+            <!-- Product Category Tabs / Headers -->
+            <div class="space-y-8">
+                <!-- Group A: 喬伊絲手工甜品 -->
+                <div>
+                    <div class="flex items-center gap-2 text-lg font-bold text-warm-800 mb-4 pl-2 border-l-4 border-brand-500">
+                        <span>🍰 喬伊絲手工甜品</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="joyce-products">
+                        <!-- Product items injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Group B: 香港淳珍伴手禮 -->
+                <div>
+                    <div class="flex items-center gap-2 text-lg font-bold text-warm-800 mb-4 pl-2 border-l-4 border-amber-500">
+                        <span>🎁 香港淳珍伴手禮</span>
+                        <span class="text-xs font-normal text-gray-500">(過年送禮最人氣，135g/盒)</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="hongkong-products">
+                        <!-- Product items injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Submission Form -->
+            <div class="mt-8 pt-6 border-t border-warm-200 bg-brand-50/50 p-6 rounded-2xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="userName" class="block text-sm font-bold text-warm-800 mb-2">
+                            訂購人姓名 / 暱稱 <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="userName" placeholder="請輸入姓名以利對帳（例：小明）" 
+                                   class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="userNote" class="block text-sm font-bold text-warm-800 mb-2">
+                            聯絡電話 / 備註資訊 <span class="text-xs font-normal text-gray-500">(選填)</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                                <i class="fa-solid fa-comment-dots"></i>
+                            </span>
+                            <input type="text" id="userNote" placeholder="例如：0912-345678 或 方便取貨時間" 
+                                   class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Summary Bar -->
+                <div class="flex flex-col sm:flex-row items-center justify-between bg-white p-4 rounded-xl border border-brand-200 gap-4">
+                    <div class="flex items-center gap-4 w-full sm:w-auto justify-around sm:justify-start">
+                        <div>
+                            <div class="text-xs text-gray-500">總選擇件數</div>
+                            <div class="text-xl font-bold text-warm-800"><span id="cart-total-qty">0</span> <span class="text-xs font-normal">件</span></div>
+                        </div>
+                        <div class="h-8 w-px bg-gray-200"></div>
+                        <div>
+                            <div class="text-xs text-gray-500">應付總金額</div>
+                            <div class="text-2xl font-extrabold text-brand-600">$<span id="cart-total-price">0</span></div>
+                        </div>
+                    </div>
+                    <button id="submit-order-btn" onclick="submitOrder()" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-base">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        提交團購訂單
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Public Statistics & Summary (For Host / Group Members) -->
+        <section class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-warm-200 space-y-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-warm-200 pb-4 gap-4">
+                <div>
+                    <h2 class="text-xl md:text-2xl font-bold text-brand-800 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-brand-500"></i>
+                        公開團購統計與收款明細
+                    </h2>
+                    <p class="text-xs text-gray-500 mt-1">即時公開數據，方便主辦人確認數量與點收對帳</p>
+                </div>
+                <!-- Action Controls -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="copySummaryText()" class="bg-warm-100 hover:bg-warm-200 text-warm-800 font-medium text-xs px-3 py-2 rounded-lg transition flex items-center gap-1 border border-warm-300">
+                        <i class="fa-solid fa-copy"></i> 複製統計文字
+                    </button>
+                    <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs px-3 py-2 rounded-lg transition flex items-center gap-1 shadow">
+                        <i class="fa-solid fa-file-csv"></i> 匯出 CSV Excel
+                    </button>
+                    <button onclick="clearAllData()" class="bg-red-50 hover:bg-red-100 text-red-600 font-medium text-xs px-2.5 py-2 rounded-lg transition border border-red-200" title="清空全部資料">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Block 1: Product Total Summary Table -->
+            <div>
+                <h3 class="text-md font-bold text-warm-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-boxes-stacked text-amber-600"></i>
+                    區塊一：品項總數量統計（店家下單用）
+                </h3>
+                <div class="overflow-x-auto rounded-2xl border border-warm-200 shadow-sm bg-white">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-warm-100 text-warm-800 font-semibold text-xs border-b border-warm-200">
+                            <tr>
+                                <th class="p-3">編號 / 商品名稱</th>
+                                <th class="p-3">規格</th>
+                                <th class="p-3">團購單價</th>
+                                <th class="p-3 text-center">總訂購數量</th>
+                                <th class="p-3 text-right">品項總金額</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-table-body" class="divide-y divide-warm-100">
+                            <!-- Injected by JS -->
+                        </tbody>
+                        <tfoot class="bg-brand-50 font-bold text-brand-900 border-t border-brand-200">
+                            <tr>
+                                <td colspan="3" class="p-3 text-right">總計累計：</td>
+                                <td class="p-3 text-center text-brand-700" id="grand-total-qty">0 份</td>
+                                <td class="p-3 text-right text-brand-700" id="grand-total-amount">$0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Block 2: Member Order Details & Payment Tracking -->
+            <div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
+                    <h3 class="text-md font-bold text-warm-800 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-brand-600"></i>
+                        區塊二：團員訂購明細與收款追蹤
+                    </h3>
+                    <div class="text-xs text-gray-500">
+                        已收金額：<span id="paid-amount-sum" class="font-bold text-emerald-600">$0</span> / 
+                        總金額：<span id="all-amount-sum" class="font-bold text-brand-700">$0</span>
+                    </div>
+                </div>
+
+                <!-- Orders List -->
+                <div class="space-y-3" id="orders-list-container">
+                    <!-- Orders Injected by JS -->
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-12 text-center text-xs text-gray-400 py-4">
+        喬伊絲手工甜品 × 香港淳珍伴手禮 團購統計系統 &copy; 2026
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. DATA DEFINITIONS ---
+        // All final prices displayed directly without price adjust badges
+        const products = [
+            // 喬伊絲手工甜品
+            { id: 1, category: 'joyce', name: '楓糖布蕾', spec: '19.5*7*4.5CM · 250g±10%', veg: '蛋奶素', originalPrice: 560, price: 240 },
+            { id: 2, category: 'joyce', name: '絲博巧磚', spec: '19.5*7*4.5CM · 260g±10%', veg: '蛋奶素', originalPrice: 570, price: 270 },
+            { id: 3, category: 'joyce', name: '伯爵提拉', spec: '19.5*7*4.5CM · 250g±10%', veg: '葷', originalPrice: 560, price: 230 },
+            { id: 4, category: 'joyce', name: '摩卡焦糖', spec: '19.5*7*4.5CM · 270g±10%', veg: '蛋奶素', originalPrice: 560, price: 250 },
+            { id: 5, category: 'joyce', name: '特濃牛奶蛋糕', spec: '19.5*7*4.5CM · 300g±10%', veg: '葷', originalPrice: 680, price: 300 },
+            { id: 6, category: 'joyce', name: '抹茶牛奶蛋糕', spec: '19.5*7*4.5CM · 300g±10%', veg: '葷', originalPrice: 680, price: 300 },
+            { id: 7, category: 'joyce', name: '芋香牛奶蛋糕', spec: '19.5*7*4.5CM · 320g±10%', veg: '葷', originalPrice: 680, price: 300 },
+            { id: 8, category: 'joyce', name: '楓檸輕語', spec: '19.5*7*4.5CM · 300g±10%', veg: '葷', originalPrice: 720, price: 310 },
+            { id: 9, category: 'joyce', name: '伯爵果語', spec: '19.5*7*4.5CM · 290g±10%', veg: '蛋奶素', originalPrice: 570, price: 270 },
+            // 香港淳珍伴手禮
+            { id: 10, category: 'hongkong', name: '香港淳珍 - 開心果可可薄脆', spec: '135g/盒 (一口淪陷極致酥脆)', veg: '伴手禮', originalPrice: 599, price: 360 },
+            { id: 11, category: 'hongkong', name: '香港淳珍 - 榛果奶茶脆脆', spec: '135g/盒 (一口淪陷極致酥脆)', veg: '伴手禮', originalPrice: 599, price: 360 }
+        ];
+
+        // State Store
+        let currentCart = {}; // { productId: count }
+        let orders = []; // Array of order objects
+
+        // --- 2. INITIALIZATION ---
+        window.onload = function() {
+            renderProductCards();
+            loadOrdersFromStorage();
+            startCountdown();
+            updateCartSummary();
+        };
+
+        // --- 3. PRODUCT RENDERING ---
+        function renderProductCards() {
+            const joyceContainer = document.getElementById('joyce-products');
+            const hkContainer = document.getElementById('hongkong-products');
+
+            joyceContainer.innerHTML = '';
+            hkContainer.innerHTML = '';
+
+            products.forEach(p => {
+                const cardHtml = `
+                    <div class="bg-white rounded-2xl p-4 border border-warm-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-2 mb-1">
+                                <h4 class="font-bold text-warm-900 text-base leading-snug">${p.name}</h4>
+                                <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full ${p.veg === '蛋奶素' ? 'bg-emerald-100 text-emerald-800' : p.veg === '葷' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'} shrink-0">
+                                    ${p.veg}
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-500 mb-3">${p.spec}</p>
+                        </div>
+
+                        <div>
+                            <div class="flex items-baseline justify-between mb-3 bg-warm-50 p-2 rounded-xl">
+                                <div>
+                                    <span class="text-xs text-gray-400 line-through">原價 $${p.originalPrice}</span>
+                                    <div class="text-lg font-black text-brand-600">
+                                        $<span id="price-display-${p.id}">${p.price}</span>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded-lg">團購價</span>
+                            </div>
+
+                            <!-- Counter Controls -->
+                            <div class="flex items-center justify-between bg-warm-100 rounded-xl p-1">
+                                <button onclick="changeQty(${p.id}, -1)" class="w-8 h-8 rounded-lg bg-white shadow-sm text-warm-800 hover:bg-brand-50 flex items-center justify-center font-bold text-base active:scale-95 transition">
+                                    -
+                                </button>
+                                <input type="number" id="qty-input-${p.id}" value="0" min="0" onchange="manualQtyChange(${p.id}, this.value)" 
+                                       class="w-12 text-center bg-transparent font-bold text-warm-900 focus:outline-none text-sm">
+                                <button onclick="changeQty(${p.id}, 1)" class="w-8 h-8 rounded-lg bg-white shadow-sm text-warm-800 hover:bg-brand-50 flex items-center justify-center font-bold text-base active:scale-95 transition">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                if (p.category === 'joyce') {
+                    joyceContainer.innerHTML += cardHtml;
+                } else {
+                    hkContainer.innerHTML += cardHtml;
+                }
+            });
+        }
+
+        // --- 4. CART & QUANTITY LOGIC ---
+        function changeQty(productId, delta) {
+            const current = currentCart[productId] || 0;
+            const newQty = Math.max(0, current + delta);
+            if (newQty === 0) {
+                delete currentCart[productId];
+            } else {
+                currentCart[productId] = newQty;
+            }
+            document.getElementById(`qty-input-${productId}`).value = newQty;
+            updateCartSummary();
+        }
+
+        function manualQtyChange(productId, val) {
+            const newQty = Math.max(0, parseInt(val) || 0);
+            if (newQty === 0) {
+                delete currentCart[productId];
+            } else {
+                currentCart[productId] = newQty;
+            }
+            document.getElementById(`qty-input-${productId}`).value = newQty;
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
+            let totalQty = 0;
+            let totalPrice = 0;
+
+            for (const [pId, qty] of Object.entries(currentCart)) {
+                const prod = products.find(p => p.id === parseInt(pId));
+                if (prod) {
+                    totalQty += qty;
+                    totalPrice += qty * prod.price;
+                }
+            }
+
+            document.getElementById('cart-total-qty').innerText = totalQty;
+            document.getElementById('cart-total-price').innerText = totalPrice.toLocaleString();
+        }
+
+        // --- 5. ORDER SUBMISSION ---
+        function submitOrder() {
+            const nameInput = document.getElementById('userName');
+            const noteInput = document.getElementById('userNote');
+            const name = nameInput.value.trim();
+            const note = noteInput.value.trim();
+
+            if (!name) {
+                showToast('請輸入訂購人姓名或暱稱！', 'error');
+                nameInput.focus();
+                return;
+            }
+
+            // Check if cart has items
+            const items = [];
+            let totalAmount = 0;
+            for (const [pId, qty] of Object.entries(currentCart)) {
+                if (qty > 0) {
+                    const prod = products.find(p => p.id === parseInt(pId));
+                    items.push({
+                        productId: prod.id,
+                        name: prod.name,
+                        price: prod.price,
+                        qty: qty,
+                        subtotal: qty * prod.price
+                    });
+                    totalAmount += qty * prod.price;
+                }
+            }
+
+            if (items.length === 0) {
+                showToast('請至少選擇一項商品數量！', 'warning');
+                return;
+            }
+
+            const newOrder = {
+                id: 'ORD-' + Date.now(),
+                name: name,
+                note: note,
+                items: items,
+                totalAmount: totalAmount,
+                isPaid: false,
+                timestamp: new Date().toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
+            };
+
+            orders.unshift(newOrder);
+            saveOrdersToStorage();
+
+            // Reset form
+            currentCart = {};
+            products.forEach(p => {
+                const input = document.getElementById(`qty-input-${p.id}`);
+                if (input) input.value = 0;
+            });
+            nameInput.value = '';
+            noteInput.value = '';
+            updateCartSummary();
+
+            showToast(`🎉 成功送出訂單！金額：$${totalAmount}`, 'success');
+            renderAllStatistics();
+        }
+
+        // --- 6. PUBLIC STATISTICS & ORDERS RENDERING ---
+        function renderAllStatistics() {
+            renderSummaryTable();
+            renderOrdersList();
+        }
+
+        function renderSummaryTable() {
+            const tbody = document.getElementById('summary-table-body');
+            tbody.innerHTML = '';
+
+            let grandQty = 0;
+            let grandAmount = 0;
+
+            // Calculate aggregated metrics
+            const totals = {};
+            products.forEach(p => totals[p.id] = 0);
+
+            orders.forEach(order => {
+                order.items.forEach(item => {
+                    totals[item.productId] = (totals[item.productId] || 0) + item.qty;
+                });
+            });
+
+            products.forEach(p => {
+                const totalQty = totals[p.id] || 0;
+                const totalSubtotal = totalQty * p.price;
+
+                grandQty += totalQty;
+                grandAmount += totalSubtotal;
+
+                const row = document.createElement('tr');
+                row.className = totalQty > 0 ? 'bg-amber-50/40 font-medium' : 'hover:bg-gray-50 text-gray-500';
+                row.innerHTML = `
+                    <td class="p-3">
+                        <div class="font-bold ${totalQty > 0 ? 'text-warm-900' : 'text-gray-600'}">${p.name}</div>
+                    </td>
+                    <td class="p-3 text-xs text-gray-500">${p.spec}</td>
+                    <td class="p-3 text-warm-800">$${p.price}</td>
+                    <td class="p-3 text-center">
+                        <span class="${totalQty > 0 ? 'bg-brand-500 text-white font-bold px-2.5 py-0.5 rounded-full' : 'text-gray-400'}">
+                            ${totalQty}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right font-bold ${totalQty > 0 ? 'text-brand-600' : 'text-gray-400'}">
+                        $${totalSubtotal.toLocaleString()}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('grand-total-qty').innerText = `${grandQty} 份`;
+            document.getElementById('grand-total-amount').innerText = `$${grandAmount.toLocaleString()}`;
+        }
+
+        function renderOrdersList() {
+            const container = document.getElementById('orders-list-container');
+            container.innerHTML = '';
+
+            let paidSum = 0;
+            let allSum = 0;
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 text-gray-400 border border-dashed border-gray-300 rounded-2xl bg-white">
+                        <i class="fa-solid fa-clipboard-list text-3xl mb-2 opacity-50"></i>
+                        <p>目前尚無任何訂單，快來搶先下單吧！</p>
+                    </div>
+                `;
+                document.getElementById('paid-amount-sum').innerText = '$0';
+                document.getElementById('all-amount-sum').innerText = '$0';
+                return;
+            }
+
+            orders.forEach(order => {
+                allSum += order.totalAmount;
+                if (order.isPaid) paidSum += order.totalAmount;
+
+                const itemsText = order.items.map(i => `${i.name} x${i.qty}`).join('、');
+
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-2xl p-4 border transition ${order.isPaid ? 'border-emerald-200 bg-emerald-50/20' : 'border-warm-200 shadow-sm'}`;
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-lg">
+                                ${order.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-warm-900 text-base">${escapeHtml(order.name)}</span>
+                                    <span class="text-xs text-gray-400">${order.timestamp}</span>
+                                </div>
+                                ${order.note ? `<p class="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded inline-block mt-0.5"><i class="fa-regular fa-sticky-note mr-1"></i>${escapeHtml(order.note)}</p>` : ''}
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between sm:justify-end gap-4">
+                            <div class="text-right">
+                                <div class="text-xs text-gray-400">訂購金額</div>
+                                <div class="text-lg font-black text-brand-600">$${order.totalAmount.toLocaleString()}</div>
+                            </div>
+                            <!-- Payment Status Toggle Button -->
+                            <button onclick="togglePayment('${order.id}')" 
+                                    class="px-3 py-1.5 rounded-xl font-bold text-xs transition flex items-center gap-1.5 border shadow-sm ${
+                                        order.isPaid 
+                                        ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700' 
+                                        : 'bg-white text-rose-600 border-rose-300 hover:bg-rose-50'
+                                    }">
+                                <i class="fa-solid ${order.isPaid ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
+                                ${order.isPaid ? '已付款' : '未付款'}
+                            </button>
+                            <button onclick="deleteOrder('${order.id}')" class="text-gray-300 hover:text-red-500 p-1 transition" title="刪除此筆訂單">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Items Detail List -->
+                    <div class="mt-3 text-xs text-warm-800 bg-warm-50/60 p-2.5 rounded-xl flex flex-wrap gap-x-4 gap-y-1">
+                        ${order.items.map(i => `
+                            <span class="inline-flex items-center gap-1">
+                                <span class="font-medium">${i.name}</span>
+                                <span class="bg-warm-200 text-warm-900 px-1.5 py-0.2 rounded font-bold">x${i.qty}</span>
+                                <span class="text-gray-400">($${i.subtotal})</span>
+                            </span>
+                        `).join(' | ')}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('paid-amount-sum').innerText = `$${paidSum.toLocaleString()}`;
+            document.getElementById('all-amount-sum').innerText = `$${allSum.toLocaleString()}`;
+        }
+
+        function togglePayment(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.isPaid = !order.isPaid;
+                saveOrdersToStorage();
+                renderAllStatistics();
+                showToast(`已變更 ${order.name} 付款狀態為：${order.isPaid ? '【已付款】' : '【未付款】'}`, 'info');
+            }
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm('確定要刪除這筆訂單嗎？')) {
+                orders = orders.filter(o => o.id !== orderId);
+                saveOrdersToStorage();
+                renderAllStatistics();
+                showToast('已刪除該筆訂單', 'info');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('⚠️ 確定要清空「所有團購訂單」記錄嗎？此操作不可復原！')) {
+                orders = [];
+                localStorage.removeItem('joyce_hk_group_orders');
+                renderAllStatistics();
+                showToast('已清空所有團購資料', 'info');
+            }
+        }
+
+        // --- 7. EXPORT & COPY FUNCTIONS ---
+        function copySummaryText() {
+            if (orders.length === 0) {
+                showToast('目前尚無訂單可供複製！', 'warning');
+                return;
+            }
+
+            // Calculate totals
+            const totals = {};
+            products.forEach(p => totals[p.id] = 0);
+            let grandAmount = 0;
+            let grandQty = 0;
+
+            orders.forEach(order => {
+                order.items.forEach(item => {
+                    totals[item.productId] = (totals[item.productId] || 0) + item.qty;
+                });
+            });
+
+            let text = `【喬伊絲 & 香港淳珍 團購總統計】\n`;
+            text += `截止時間：11/19 15:00\n`;
+            text += `--------------------------\n`;
+            text += `📦 品項總備貨需求：\n`;
+
+            products.forEach(p => {
+                const q = totals[p.id] || 0;
+                if (q > 0) {
+                    text += `• ${p.name}: ${q} 份 ($${q * p.price})\n`;
+                    grandQty += q;
+                    grandAmount += q * p.price;
+                }
+            });
+
+            text += `--------------------------\n`;
+            text += `📊 總數量：${grandQty} 份\n`;
+            text += `💰 總金額：$${grandAmount.toLocaleString()} 元\n\n`;
+
+            text += `👤 團員下單明細：\n`;
+            orders.forEach(o => {
+                const itemsStr = o.items.map(i => `${i.name}x${i.qty}`).join(', ');
+                const status = o.isPaid ? '[已付]' : '[未付]';
+                text += `${status} ${o.name}: ${itemsStr} = $${o.totalAmount}\n`;
+            });
+
+            // Copy using legacy execCommand fallback safe method
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast('📋 已將團購統計結果複製至剪貼簿！', 'success');
+            } catch (err) {
+                showToast('複製失敗，請手動複製', 'error');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function exportCSV() {
+            if (orders.length === 0) {
+                showToast('尚無訂單資料可供匯出！', 'warning');
+                return;
+            }
+
+            let csvContent = "\uFEFF"; // UTF-8 BOM for Excel Chinese support
+            csvContent += "訂單時間,訂購人,付款狀態,總金額,備註,訂購明細\n";
+
+            orders.forEach(o => {
+                const itemsStr = o.items.map(i => `${i.name}(${i.qty}份)`).join(';');
+                const paidStr = o.isPaid ? "已付款" : "未付款";
+                const row = [
+                    `"${o.timestamp}"`,
+                    `"${o.name}"`,
+                    `"${paidStr}"`,
+                    `"${o.totalAmount}"`,
+                    `"${o.note || ''}"`,
+                    `"${itemsStr}"`
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `團購統計明細_${new Date().toISOString().slice(0,10)}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('📊 已匯出 CSV 檔！', 'success');
+        }
+
+        // --- 8. STORAGE LOGIC ---
+        function saveOrdersToStorage() {
+            localStorage.setItem('joyce_hk_group_orders', JSON.stringify(orders));
+        }
+
+        function loadOrdersFromStorage() {
+            const saved = localStorage.getItem('joyce_hk_group_orders');
+            if (saved) {
+                try {
+                    orders = JSON.parse(saved);
+                } catch (e) {
+                    orders = [];
+                }
+            }
+            renderAllStatistics();
+        }
+
+        // --- 9. COUNTDOWN TIMER ---
+        function startCountdown() {
+            // Target: Nov 19 15:00:00 of the current year (or next year if passed)
+            const now = new Date();
+            let targetYear = now.getFullYear();
+            let targetDate = new Date(targetYear, 10, 19, 15, 0, 0); // Month 10 is Nov
+
+            // If past Nov 19 15:00 in current year, calculate for next year
+            if (now > targetDate) {
+                targetDate = new Date(targetYear + 1, 10, 19, 15, 0, 0);
+            }
+
+            function update() {
+                const current = new Date();
+                const diff = targetDate - current;
+
+                if (diff <= 0) {
+                    document.getElementById('countdown').innerText = "⏰ 團購已截止下單";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / 1000 / 60) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                let displayStr = "";
+                if (days > 0) displayStr += `${days}天 `;
+                displayStr += `${String(hours).padStart(2, '0')}時${String(minutes).padStart(2, '0')}分${String(seconds).padStart(2, '0')}秒`;
+
+                document.getElementById('countdown').innerText = `倒數 ${displayStr}`;
+            }
+
+            update();
+            setInterval(update, 1000);
+        }
+
+        // --- 10. UTILITIES ---
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-warm-900 text-white";
+            if (type === 'success') bgClass = "bg-emerald-600 text-white";
+            if (type === 'error') bgClass = "bg-rose-600 text-white";
+            if (type === 'warning') bgClass = "bg-amber-500 text-white";
+
+            toast.className = `${bgClass} pointer-events-auto px-4 py-3 rounded-xl shadow-lg text-sm font-medium transition duration-300 transform translate-y-2 opacity-0 flex items-center justify-between gap-2`;
+            toast.innerHTML = `<span>${message}</span>`;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => {
+                    if (container.contains(toast)) container.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
