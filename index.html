@@ -1,727 +1,564 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>喬伊絲手工甜品 & 香港淳珍伴手禮 聯合團購</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#fffaf5',
-                            100: '#fef3e7',
-                            200: '#fce4ce',
-                            500: '#e07a5f',
-                            600: '#d15e41',
-                            700: '#b44329',
-                            800: '#782d1c',
-                            900: '#471b10',
-                        },
-                        warm: {
-                            50: '#faf8f5',
-                            100: '#f3efe6',
-                            200: '#e5dccb',
-                            800: '#5c4d3c',
-                            900: '#382f24'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Noto Sans TC', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            background-color: #fcf8f3;
-            font-family: 'Noto Sans TC', sans-serif;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(243, 239, 230, 0.8);
-        }
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #d15e41;
-            border-radius: 4px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>喬伊絲甜品 & 香港淳珍 辦公室聯合團購</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: #fcfbf7;
+    }
+  </style>
 </head>
-<body class="text-warm-900 min-h-screen pb-12">
+<body class="text-slate-800 pb-16">
 
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
-
-    <!-- Password Modal -->
-    <div id="password-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 border border-warm-200 transform transition-all">
-            <div class="text-center mb-4">
-                <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-2 text-xl">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <h3 class="text-lg font-bold text-warm-900">主購身份驗證</h3>
-                <p class="text-xs text-gray-500 mt-1">此為敏感操作，請輸入主購管理密碼以繼續</p>
-            </div>
-            <div class="mb-4">
-                <input type="password" id="admin-password-input" placeholder="請輸入主購密碼" 
-                       class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 text-center text-lg tracking-widest"
-                       onkeyup="if(event.key==='Enter') confirmAdminPassword()">
-            </div>
-            <div class="flex gap-2">
-                <button onclick="closePasswordModal()" class="w-1/2 py-2.5 rounded-xl border border-gray-300 text-gray-600 font-medium text-sm hover:bg-gray-50">取消</button>
-                <button onclick="confirmAdminPassword()" class="w-1/2 py-2.5 rounded-xl bg-brand-600 text-white font-bold text-sm hover:bg-brand-700 shadow">確認驗證</button>
-            </div>
-        </div>
+  <!-- Header Header -->
+  <header class="bg-amber-900 text-amber-50 shadow-md">
+    <div class="max-w-4xl mx-auto px-4 py-6 text-center">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-wide">美味甜點伴手禮 聯合團購</h1>
+      <p class="text-amber-200 text-sm mt-1">喬伊絲手工甜品 × 香港淳珍伴手禮</p>
+      
+      <!-- Countdown Banner -->
+      <div class="mt-4 bg-amber-950/60 inline-flex flex-col sm:flex-row items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-amber-700/50 text-sm">
+        <span class="flex items-center text-amber-300 font-medium">
+          <i class="fa-regular font-bold fa-clock mr-1.5">
+</i> 截止時間：11月19日 下午 3:00
+        </span>
+        <span id="countdownText" class="font-bold text-amber-100 bg-amber-800/80 px-3 py-0.5 rounded-full text-xs">
+          計算中...
+        </span>
+      </div>
     </div>
+  </header>
 
-    <!-- Header / Banner Section -->
-    <header class="bg-gradient-to-r from-brand-700 via-brand-600 to-amber-700 text-white shadow-lg relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-5xl mx-auto px-4 py-8 relative z-10 text-center">
-            <span class="inline-block px-3 py-1 bg-amber-400 text-brand-900 font-bold text-xs uppercase tracking-wider rounded-full mb-3 shadow">超人氣限時預購</span>
-            <h1 class="text-2xl md:text-4xl font-extrabold tracking-tight mb-2">喬伊絲手工甜品 × 香港淳珍伴手禮</h1>
-            <p class="text-amber-100 text-sm md:text-base font-medium max-w-2xl mx-auto">嚴選美味蛋糕甜品與過年熱銷酥脆伴手禮，團購限時優惠特價中！</p>
-            
-            <!-- Countdown Timer Box -->
-            <div class="mt-6 inline-flex flex-col sm:flex-row items-center gap-3 bg-black/25 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20">
-                <div class="flex items-center gap-2 text-amber-300 font-semibold text-sm sm:text-base">
-                    <i class="fa-regular font-bold fa-clock text-lg"></i>
-                    <span>截止時間：11月19日 下午 03:00</span>
-                </div>
-                <div id="countdown" class="font-mono font-bold text-amber-200 text-base bg-brand-900/40 px-3 py-1 rounded-lg">
-                    計算剩餘時間...
-                </div>
-            </div>
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-8">
+
+    <!-- Form Section -->
+    <form id="orderForm" onsubmit="handleFormSubmit(event)" class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 md:p-7">
+      
+      <!-- Buyer Name Input -->
+      <div class="mb-8 bg-amber-50/50 p-4 rounded-xl border border-amber-100">
+        <label for="userName" class="block text-base font-bold text-amber-950 mb-2">
+          訂購人姓名 <span class="text-rose-500">*</span>
+        </label>
+        <input 
+          type="text" 
+          id="userName" 
+          required 
+          placeholder="請輸入您的姓名（例如：王小明）" 
+          class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition text-slate-800 bg-white"
+        >
+      </div>
+
+      <!-- Category 1: Joyce Dessert -->
+      <div class="mb-8">
+        <div class="flex items-center border-b-2 border-amber-800/20 pb-3 mb-4">
+          <span class="bg-amber-800 text-white font-bold text-xs px-2.5 py-1 rounded mr-2">類別 A</span>
+          <h2 class="text-xl font-bold text-amber-900">喬伊絲手工甜品</h2>
         </div>
-    </header>
 
-    <main class="max-w-5xl mx-auto px-4 mt-8 space-y-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="joyceProducts">
+          <!-- Populated by JS -->
+        </div>
+      </div>
 
-        <!-- Section 1: Product Selection & Order Form -->
-        <section class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-warm-200">
-            <div class="flex items-center justify-between border-b border-warm-200 pb-4 mb-6">
-                <div>
-                    <h2 class="text-xl md:text-2xl font-bold text-brand-800 flex items-center gap-2">
-                        <i class="fa-solid fa-cart-shopping text-brand-500"></i>
-                        選擇商品與填寫訂單
-                    </h2>
-                    <p class="text-xs text-gray-500 mt-1">請選擇欲購買數量，輸入姓名後點擊下方按鈕送出</p>
-                </div>
-                <span class="text-xs bg-brand-100 text-brand-700 px-3 py-1 rounded-full font-medium">即時計算總金額</span>
-            </div>
+      <!-- Category 2: Hong Kong Chun Zhen -->
+      <div class="mb-8">
+        <div class="flex items-center border-b-2 border-amber-800/20 pb-3 mb-4">
+          <span class="bg-amber-700 text-white font-bold text-xs px-2.5 py-1 rounded mr-2">類別 B</span>
+          <h2 class="text-xl font-bold text-amber-900">香港淳珍伴手禮</h2>
+        </div>
 
-            <!-- Product Items -->
-            <div class="space-y-8">
-                <!-- Group A: 喬伊絲手工甜品 -->
-                <div>
-                    <div class="flex items-center gap-2 text-lg font-bold text-warm-800 mb-4 pl-2 border-l-4 border-brand-500">
-                        <span>🍰 喬伊絲手工甜品</span>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="joyce-products"></div>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="hkProducts">
+          <!-- Populated by JS -->
+        </div>
+      </div>
 
-                <!-- Group B: 香港淳珍伴手禮 -->
-                <div>
-                    <div class="flex items-center gap-2 text-lg font-bold text-warm-800 mb-4 pl-2 border-l-4 border-amber-500">
-                        <span>🎁 香港淳珍伴手禮</span>
-                        <span class="text-xs font-normal text-gray-500">(過年送禮最人氣，135g/盒)</span>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="hongkong-products"></div>
-                </div>
-            </div>
+      <!-- Footer Action & Live Total -->
+      <div class="sticky bottom-4 bg-slate-900 text-white p-4 rounded-xl shadow-xl flex items-center justify-between z-10 border border-slate-700">
+        <div>
+          <div class="text-xs text-slate-400">本次訂購小計</div>
+          <div class="text-2xl font-bold text-amber-400">NT$ <span id="currentTotal">0</span></div>
+        </div>
+        <button 
+          type="submit" 
+          class="bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-bold px-6 py-3 rounded-lg transition flex items-center shadow"
+        >
+          <i class="fa-solid fa-paper-plane mr-2"></i> 送出團購單
+        </button>
+      </div>
+    </form>
 
-            <!-- Order Submission Form -->
-            <div class="mt-8 pt-6 border-t border-warm-200 bg-brand-50/50 p-6 rounded-2xl">
-                <div class="mb-6">
-                    <label for="userName" class="block text-sm font-bold text-warm-800 mb-2">
-                        訂購人姓名 <span class="text-red-500">*</span>
-                    </label>
-                    <div class="relative max-w-md">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                            <i class="fa-solid fa-user"></i>
-                        </span>
-                        <input type="text" id="userName" placeholder="請輸入姓名（例如：王小明）" 
-                               class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition text-sm">
-                    </div>
-                </div>
+    <!-- Public Summary Section -->
+    <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 md:p-7 space-y-6">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">團購公開明細與統計</h2>
+          <p class="text-xs text-slate-500 mt-0.5">即時公開明細，方便對帳與店家下單彙整</p>
+        </div>
+        
+        <!-- Admin Toggle / Quick Actions -->
+        <div class="flex items-center gap-2">
+          <button 
+            type="button" 
+            onclick="copySummaryText()" 
+            class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg font-medium transition flex items-center"
+          >
+            <i class="fa-regular fa-copy mr-1.5"></i> 複製統計
+          </button>
+          <button 
+            type="button" 
+            onclick="exportCSV()" 
+            class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg font-medium transition flex items-center"
+          >
+            <i class="fa-solid fa-file-csv mr-1.5"></i> 匯出 CSV
+          </button>
+        </div>
+      </div>
 
-                <!-- Live Summary Bar -->
-                <div class="flex flex-col sm:flex-row items-center justify-between bg-white p-4 rounded-xl border border-brand-200 gap-4">
-                    <div class="flex items-center gap-4 w-full sm:w-auto justify-around sm:justify-start">
-                        <div>
-                            <div class="text-xs text-gray-500">總選擇件數</div>
-                            <div class="text-xl font-bold text-warm-800"><span id="cart-total-qty">0</span> <span class="text-xs font-normal">件</span></div>
-                        </div>
-                        <div class="h-8 w-px bg-gray-200"></div>
-                        <div>
-                            <div class="text-xs text-gray-500">應付總金額</div>
-                            <div class="text-2xl font-extrabold text-brand-600">$<span id="cart-total-price">0</span></div>
-                        </div>
-                    </div>
-                    <button id="submit-order-btn" onclick="submitOrder()" class="w-full sm:w-auto bg-brand-600 hover:bg-brand-700 active:scale-95 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2 text-base">
-                        <i class="fa-solid fa-paper-plane"></i>
-                        提交團購訂單
-                    </button>
-                </div>
-            </div>
-        </section>
+      <!-- Item Aggregation Table (Store Order Helper) -->
+      <div>
+        <h3 class="text-sm font-bold text-slate-700 mb-3 flex items-center">
+          <i class="fa-solid fa-boxes-packing text-amber-700 mr-2"></i> 各品項預購總數量統計
+        </h3>
+        <div class="overflow-x-auto rounded-lg border border-slate-200">
+          <table class="w-full text-sm text-left text-slate-700">
+            <thead class="bg-slate-50 text-slate-700 text-xs uppercase border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-2.5">商品品名</th>
+                <th class="px-4 py-2.5 text-right">單價</th>
+                <th class="px-4 py-2.5 text-center">總數量</th>
+                <th class="px-4 py-2.5 text-right">總金額</th>
+              </tr>
+            </thead>
+            <tbody id="summaryTableBody" class="divide-y divide-slate-100">
+              <!-- Populated by JS -->
+            </tbody>
+            <tfoot class="bg-amber-50/60 font-bold text-amber-950 border-t border-amber-200">
+              <tr>
+                <td class="px-4 py-3" colspan="2">全團總計</td>
+                <td class="px-4 py-3 text-center" id="grandTotalQty">0 盒</td>
+                <td class="px-4 py-3 text-right text-base text-amber-800">NT$ <span id="grandTotalAmount">0</span></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
 
-        <!-- Section 2: Public Statistics & Summary -->
-        <section class="glass-card rounded-3xl p-6 md:p-8 shadow-xl border border-warm-200 space-y-8">
-            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-warm-200 pb-4 gap-4">
-                <div>
-                    <h2 class="text-xl md:text-2xl font-bold text-brand-800 flex items-center gap-2">
-                        <i class="fa-solid fa-chart-pie text-brand-500"></i>
-                        公開團購統計與收款明細
-                    </h2>
-                    <p class="text-xs text-gray-500 mt-1">即時公開數據，方便主辦人確認數量與點收對帳</p>
-                </div>
-                <!-- Action Controls -->
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="copySummaryText()" class="bg-warm-100 hover:bg-warm-200 text-warm-800 font-medium text-xs px-3 py-2 rounded-lg transition flex items-center gap-1 border border-warm-300">
-                        <i class="fa-solid fa-copy"></i> 複製統計文字
-                    </button>
-                    <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs px-3 py-2 rounded-lg transition flex items-center gap-1 shadow">
-                        <i class="fa-solid fa-file-csv"></i> 匯出 CSV Excel
-                    </button>
-                    <button onclick="requestClearAll()" class="bg-red-50 hover:bg-red-100 text-red-600 font-medium text-xs px-2.5 py-2 rounded-lg transition border border-red-200" title="清空全部資料 (需主購密碼)">
-                        <i class="fa-solid fa-trash-can"></i> 清空
-                    </button>
-                </div>
-            </div>
+      <!-- Individual Order List -->
+      <div class="pt-2">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold text-slate-700 flex items-center">
+            <i class="fa-solid fa-list-check text-amber-700 mr-2"></i> 團員訂購明細 (<span id="orderCount">0</span> 筆)
+          </h3>
+          <span class="text-xs text-slate-400">點擊付款狀態可直接切換</span>
+        </div>
 
-            <!-- Block 1: Product Total Summary Table -->
+        <div class="space-y-3" id="ordersList">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Product Definitions
+    const products = [
+      // Joyce Desserts (Tail numbers adjusted: +1 for prices ending in 9)
+      { id: 'j1', category: '喬伊絲手工甜品', name: '楓糖布蕾', spec: '19.5*7*4.5CM · 250g±10%', price: 240, origPrice: 560, tag: '蛋奶素' },
+      { id: 'j2', category: '喬伊絲手工甜品', name: '絲博巧磚', spec: '19.5*7*4.5CM · 260g±10%', price: 270, origPrice: 570, tag: '蛋奶素' },
+      { id: 'j3', category: '喬伊絲手工甜品', name: '伯爵提拉', spec: '19.5*7*4.5CM · 250g±10%', price: 230, origPrice: 560, tag: '葷' },
+      { id: 'j4', category: '喬伊絲手工甜品', name: '摩卡焦糖', spec: '19.5*7*4.5CM · 270g±10%', price: 250, origPrice: 560, tag: '蛋奶素' },
+      { id: 'j5', category: '喬伊絲手工甜品', name: '特濃牛奶蛋糕', spec: '19.5*7*4.5CM · 300g±10%', price: 300, origPrice: 680, tag: '葷' },
+      { id: 'j6', category: '喬伊絲手工甜品', name: '抹茶牛奶蛋糕', spec: '19.5*7*4.5CM · 300g±10%', price: 300, origPrice: 680, tag: '葷' },
+      { id: 'j7', category: '喬伊絲手工甜品', name: '芋香牛奶蛋糕', spec: '19.5*7*4.5CM · 320g±10%', price: 300, origPrice: 680, tag: '葷' },
+      { id: 'j8', category: '喬伊絲手工甜品', name: '楓檸輕語', spec: '19.5*7*4.5CM · 300g±10%', price: 310, origPrice: 720, tag: '葷' },
+      { id: 'j9', category: '喬伊絲手工甜品', name: '伯爵果語', spec: '19.5*7*4.5CM · 290g±10%', price: 270, origPrice: 570, tag: '蛋奶素' },
+
+      // Hong Kong Chun Zhen
+      { id: 'hk1', category: '香港淳珍伴手禮', name: '開心果可可薄脆', spec: '135g/盒 (極緻酥脆)', price: 360, origPrice: 599, tag: '超人氣預購' },
+      { id: 'hk2', category: '香港淳珍伴手禮', name: '榛果奶茶脆脆', spec: '135g/盒 (極緻酥脆)', price: 360, origPrice: 599, tag: '超人氣預購' },
+    ];
+
+    // Local Storage State
+    let orders = JSON.parse(localStorage.getItem('groupbuy_orders_v2') || '[]');
+
+    // Master Key for Admin Actions
+    const ADMIN_PASS = '117117';
+
+    // Render Product Cards
+    function initProducts() {
+      const joyceContainer = document.getElementById('joyceProducts');
+      const hkContainer = document.getElementById('hkProducts');
+
+      products.forEach(p => {
+        const cardHtml = `
+          <div class="border border-slate-200 rounded-xl p-4 bg-white flex flex-col justify-between hover:border-amber-300 transition shadow-sm">
             <div>
-                <h3 class="text-md font-bold text-warm-800 mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-boxes-stacked text-amber-600"></i>
-                    區塊一：品項總數量統計（店家下單用）
-                </h3>
-                <div class="overflow-x-auto rounded-2xl border border-warm-200 shadow-sm bg-white">
-                    <table class="w-full text-left text-sm">
-                        <thead class="bg-warm-100 text-warm-800 font-semibold text-xs border-b border-warm-200">
-                            <tr>
-                                <th class="p-3">編號 / 商品名稱</th>
-                                <th class="p-3">規格</th>
-                                <th class="p-3">團購單價</th>
-                                <th class="p-3 text-center">總訂購數量</th>
-                                <th class="p-3 text-right">品項總金額</th>
-                            </tr>
-                        </thead>
-                        <tbody id="summary-table-body" class="divide-y divide-warm-100"></tbody>
-                        <tfoot class="bg-brand-50 font-bold text-brand-900 border-t border-brand-200">
-                            <tr>
-                                <td colspan="3" class="p-3 text-right">總計累計：</td>
-                                <td class="p-3 text-center text-brand-700" id="grand-total-qty">0 份</td>
-                                <td class="p-3 text-right text-brand-700" id="grand-total-amount">$0</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+              <div class="flex items-start justify-between gap-2 mb-1">
+                <h3 class="font-bold text-slate-800 text-base">${p.name}</h3>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-medium shrink-0">${p.tag}</span>
+              </div>
+              <p class="text-xs text-slate-400 mb-3">${p.spec}</p>
+            </div>
+            
+            <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+              <div>
+                <span class="text-xs text-slate-400 line-through mr-1">NT$${p.origPrice}</span>
+                <span class="text-lg font-bold text-amber-800">NT$${p.price}</span>
+              </div>
+
+              <!-- Counter -->
+              <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                <button 
+                  type="button" 
+                  onclick="updateQty('${p.id}', -1)"
+                  class="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-slate-200 active:bg-slate-300 transition"
+                >-</button>
+                <input 
+                  type="number" 
+                  id="qty_${p.id}" 
+                  value="0" 
+                  min="0" 
+                  onchange="calcTotal()"
+                  class="w-10 h-8 text-center text-sm font-bold bg-transparent text-slate-800 focus:outline-none"
+                />
+                <button 
+                  type="button" 
+                  onclick="updateQty('${p.id}', 1)"
+                  class="w-8 h-8 flex items-center justify-center text-slate-600 hover:bg-slate-200 active:bg-slate-300 transition"
+                >+</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        if (p.category === '喬伊絲手工甜品') {
+          joyceContainer.innerHTML += cardHtml;
+        } else {
+          hkContainer.innerHTML += cardHtml;
+        }
+      });
+    }
+
+    // Counter Helper
+    function updateQty(id, delta) {
+      const input = document.getElementById(`qty_${id}`);
+      let current = parseInt(input.value) || 0;
+      current = Math.max(0, current + delta);
+      input.value = current;
+      calcTotal();
+    }
+
+    // Calculate Form Total
+    function calcTotal() {
+      let total = 0;
+      products.forEach(p => {
+        const qty = parseInt(document.getElementById(`qty_${p.id}`)?.value) || 0;
+        total += qty * p.price;
+      });
+      document.getElementById('currentTotal').innerText = total.toLocaleString();
+    }
+
+    // Submit New Order
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const userName = document.getElementById('userName').value.trim();
+
+      if (!userName) {
+        alert('請填寫訂購人姓名！');
+        return;
+      }
+
+      const orderItems = [];
+      let totalAmount = 0;
+
+      products.forEach(p => {
+        const qty = parseInt(document.getElementById(`qty_${p.id}`).value) || 0;
+        if (qty > 0) {
+          orderItems.push({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            qty: qty,
+            subtotal: qty * p.price
+          });
+          totalAmount += qty * p.price;
+        }
+      });
+
+      if (orderItems.length === 0) {
+        alert('請至少選擇一項商品與數量！');
+        return;
+      }
+
+      const newOrder = {
+        orderId: 'ORD-' + Date.now().toString().slice(-6),
+        userName: userName,
+        items: orderItems,
+        totalAmount: totalAmount,
+        paid: false,
+        time: new Date().toLocaleString('zh-TW', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+      };
+
+      orders.unshift(newOrder);
+      saveAndRender();
+
+      // Reset Form
+      document.getElementById('userName').value = '';
+      products.forEach(p => {
+        document.getElementById(`qty_${p.id}`).value = 0;
+      });
+      calcTotal();
+
+      alert(`下單成功！感謝 ${userName}，金額計 NT$ ${totalAmount.toLocaleString()} 元。`);
+    }
+
+    // Toggle Payment Status with password verification
+    function togglePaid(index) {
+      const inputPass = prompt('請輸入主購密碼以切換付款狀態：');
+      if (inputPass === null) return; // User cancelled
+      
+      if (inputPass === ADMIN_PASS) {
+        orders[index].paid = !orders[index].paid;
+        saveAndRender();
+      } else {
+        alert('密碼錯誤！無法修改付款狀態。');
+      }
+    }
+
+    // Delete Order with password verification
+    function deleteOrder(index) {
+      const inputPass = prompt('【主購權限驗證】\n要刪除此筆訂單，請輸入主購密碼：');
+      if (inputPass === null) return; // User cancelled
+
+      if (inputPass === ADMIN_PASS) {
+        const target = orders[index];
+        if (confirm(`確定要刪除「${target.userName}」這筆訂單嗎？`)) {
+          orders.splice(index, 1);
+          saveAndRender();
+        }
+      } else {
+        alert('密碼錯誤！無法進行刪除操作。');
+      }
+    }
+
+    // Save and Refresh UI
+    function saveAndRender() {
+      localStorage.setItem('groupbuy_orders_v2', JSON.stringify(orders));
+      renderSummaryTable();
+      renderOrdersList();
+    }
+
+    // Render Product Aggregation Table
+    function renderSummaryTable() {
+      const tbody = document.getElementById('summaryTableBody');
+      tbody.innerHTML = '';
+
+      let grandQty = 0;
+      let grandAmt = 0;
+
+      products.forEach(p => {
+        let qtyTotal = 0;
+        orders.forEach(o => {
+          const item = o.items.find(i => i.id === p.id);
+          if (item) qtyTotal += item.qty;
+        });
+
+        const subtotal = qtyTotal * p.price;
+        grandQty += qtyTotal;
+        grandAmt += subtotal;
+
+        if (qtyTotal > 0) {
+          tbody.innerHTML += `
+            <tr class="hover:bg-slate-50">
+              <td class="px-4 py-2.5 font-medium text-slate-800">
+                ${p.name}
+                <span class="text-[11px] text-slate-400 block">${p.category}</span>
+              </td>
+              <td class="px-4 py-2.5 text-right text-slate-500">NT$ ${p.price}</td>
+              <td class="px-4 py-2.5 text-center font-bold text-amber-800 bg-amber-50/30">${qtyTotal} 盒</td>
+              <td class="px-4 py-2.5 text-right font-medium">NT$ ${subtotal.toLocaleString()}</td>
+            </tr>
+          `;
+        }
+      });
+
+      if (grandQty === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-slate-400">目前尚無預購數據</td></tr>`;
+      }
+
+      document.getElementById('grandTotalQty').innerText = `${grandQty} 盒`;
+      document.getElementById('grandTotalAmount').innerText = grandAmt.toLocaleString();
+    }
+
+    // Render Orders List
+    function renderOrdersList() {
+      const container = document.getElementById('ordersList');
+      document.getElementById('orderCount').innerText = orders.length;
+      container.innerHTML = '';
+
+      if (orders.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-400 border border-dashed border-slate-200 rounded-xl">
+            目前還沒有人下單，成為第一個下單的人吧！
+          </div>
+        `;
+        return;
+      }
+
+      orders.forEach((o, idx) => {
+        const detailsStr = o.items.map(i => `${i.name} × ${i.qty}`).join('、');
+        
+        container.innerHTML += `
+          <div class="border ${o.paid ? 'border-emerald-200 bg-emerald-50/20' : 'border-slate-200 bg-white'} rounded-xl p-4 shadow-sm relative">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-2 border-b border-slate-100 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-slate-800 text-base">${o.userName}</span>
+                <span class="text-[11px] text-slate-400">${o.time}</span>
+              </div>
+              
+              <div class="flex items-center gap-2">
+                <!-- Status Toggle -->
+                <button 
+                  type="button" 
+                  onclick="togglePaid(${idx})" 
+                  title="主購點擊切換狀態"
+                  class="text-xs px-2.5 py-1 rounded-full font-bold flex items-center transition cursor-pointer ${
+                    o.paid 
+                    ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200' 
+                    : 'bg-rose-100 text-rose-600 hover:bg-rose-200'
+                  }"
+                >
+                  <i class="fa-solid ${o.paid ? 'fa-circle-check' : 'fa-clock'} mr-1"></i>
+                  ${o.paid ? '已付款' : '未付款'}
+                </button>
+
+                <!-- Delete Button -->
+                <button 
+                  type="button" 
+                  onclick="deleteOrder(${idx})" 
+                  title="主購刪除此筆"
+                  class="text-slate-400 hover:text-rose-600 p-1.5 transition rounded-lg hover:bg-rose-50"
+                >
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
             </div>
 
-            <!-- Block 2: Member Order Details & Payment Tracking -->
-            <div>
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
-                    <h3 class="text-md font-bold text-warm-800 flex items-center gap-2">
-                        <i class="fa-solid fa-users text-brand-600"></i>
-                        區塊二：團員訂購明細與收款追蹤
-                    </h3>
-                    <div class="text-xs text-gray-500">
-                        已收金額：<span id="paid-amount-sum" class="font-bold text-emerald-600">$0</span> / 
-                        總金額：<span id="all-amount-sum" class="font-bold text-brand-700">$0</span>
-                    </div>
-                </div>
-
-                <!-- Orders List -->
-                <div class="space-y-3" id="orders-list-container"></div>
+            <!-- Items -->
+            <div class="text-sm text-slate-600 mb-2">
+              ${detailsStr}
             </div>
 
-        </section>
-    </main>
+            <!-- Total -->
+            <div class="text-right text-xs text-slate-500">
+              合計金額：<span class="text-base font-bold text-amber-800">NT$ ${o.totalAmount.toLocaleString()}</span>
+            </div>
+          </div>
+        `;
+      });
+    }
 
-    <footer class="mt-12 text-center text-xs text-gray-400 py-4">
-        喬伊絲手工甜品 × 香港淳珍伴手禮 團購統計系統 &copy; 2026
-    </footer>
+    // Export CSV Helper
+    function exportCSV() {
+      if (orders.length === 0) {
+        alert('目前沒有資料可供匯出');
+        return;
+      }
 
-    <!-- JavaScript Logic -->
-    <script>
-        const ADMIN_PASS = '117117';
+      let csv = '\uFEFF訂購單號,姓名,訂購明細,總金額,付款狀態,時間\n';
+      orders.forEach(o => {
+        const details = o.items.map(i => `${i.name}*${i.qty}`).join('; ');
+        csv += `"${o.orderId}","${o.userName}","${details}","${o.totalAmount}","${o.paid ? '已付款' : '未付款'}","${o.time}"\n`;
+      });
 
-        const products = [
-            // 喬伊絲手工甜品
-            { id: 1, category: 'joyce', name: '楓糖布蕾', spec: '19.5*7*4.5CM · 250g±10%', veg: '蛋奶素', originalPrice: 560, price: 240 },
-            { id: 2, category: 'joyce', name: '絲博巧磚', spec: '19.5*7*4.5CM · 260g±10%', veg: '蛋奶素', originalPrice: 570, price: 270 },
-            { id: 3, category: 'joyce', name: '伯爵提拉', spec: '19.5*7*4.5CM · 250g±10%', veg: '葷', originalPrice: 560, price: 230 },
-            { id: 4, category: 'joyce', name: '摩卡焦糖', spec: '19.5*7*4.5CM · 270g±10%', veg: '蛋奶素', originalPrice: 560, price: 250 },
-            { id: 5, category: 'joyce', name: '特濃牛奶蛋糕', spec: '19.5*7*4.5CM · 300g±10%', veg: '葷', originalPrice: 680, price: 300 },
-            { id: 6, category: 'joyce', name: '抹茶牛奶蛋糕', spec: '19.5*7*4.5CM · 300g±10%', veg: '葷', originalPrice: 680, price: 300 },
-            { id: 7, category: 'joyce', name: '芋香牛奶蛋糕', spec: '19.5*7*4.5CM · 320g±10%', veg: '葷', originalPrice: 680, price: 300 },
-            { id: 8, category: 'joyce', name: '楓檸輕語', spec: '19.5*7*4.5CM · 300g±10%', veg: '葷', originalPrice: 720, price: 310 },
-            { id: 9, category: 'joyce', name: '伯爵果語', spec: '19.5*7*4.5CM · 290g±10%', veg: '蛋奶素', originalPrice: 570, price: 270 },
-            // 香港淳珍伴手禮
-            { id: 10, category: 'hongkong', name: '香港淳珍 - 開心果可可薄脆', spec: '135g/盒 (一口淪陷極致酥脆)', veg: '伴手禮', originalPrice: 599, price: 360 },
-            { id: 11, category: 'hongkong', name: '香港淳珍 - 榛果奶茶脆脆', spec: '135g/盒 (一口淪陷極致酥脆)', veg: '伴手禮', originalPrice: 599, price: 360 }
-        ];
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `團購明細統計_${new Date().toISOString().slice(0,10)}.csv`;
+      link.click();
+    }
 
-        let currentCart = {};
-        let orders = [];
-        let pendingAction = null; // Store function to execute after password verification
+    // Copy Text Summary for Clipboard
+    function copySummaryText() {
+      let txt = `📋【甜點伴手禮團購 預購總數統計】\n截止日期：11/19 下午 3:00\n------------------\n`;
+      
+      let grandQty = 0;
+      let grandAmt = 0;
 
-        window.onload = function() {
-            renderProductCards();
-            loadOrdersFromStorage();
-            startCountdown();
-            updateCartSummary();
-        };
+      products.forEach(p => {
+        let qtyTotal = 0;
+        orders.forEach(o => {
+          const item = o.items.find(i => i.id === p.id);
+          if (item) qtyTotal += item.qty;
+        });
+        if (qtyTotal > 0) {
+          txt += `${p.name} × ${qtyTotal} 盒 (小計 $${qtyTotal * p.price})\n`;
+          grandQty += qtyTotal;
+          grandAmt += qtyTotal * p.price;
+        }
+      });
 
-        function renderProductCards() {
-            const joyceContainer = document.getElementById('joyce-products');
-            const hkContainer = document.getElementById('hongkong-products');
-            joyceContainer.innerHTML = '';
-            hkContainer.innerHTML = '';
+      txt += `------------------\n總預購量：${grandQty} 盒\n總金額：NT$ ${grandAmt.toLocaleString()} 元\n`;
+      txt += `參團總人數：${orders.length} 人`;
 
-            products.forEach(p => {
-                const cardHtml = `
-                    <div class="bg-white rounded-2xl p-4 border border-warm-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-start justify-between gap-2 mb-1">
-                                <h4 class="font-bold text-warm-900 text-base leading-snug">${p.name}</h4>
-                                <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full ${p.veg === '蛋奶素' ? 'bg-emerald-100 text-emerald-800' : p.veg === '葷' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'} shrink-0">
-                                    ${p.veg}
-                                </span>
-                            </div>
-                            <p class="text-xs text-gray-500 mb-3">${p.spec}</p>
-                        </div>
-                        <div>
-                            <div class="flex items-baseline justify-between mb-3 bg-warm-50 p-2 rounded-xl">
-                                <div>
-                                    <span class="text-xs text-gray-400 line-through">原價 $${p.originalPrice}</span>
-                                    <div class="text-lg font-black text-brand-600">$${p.price}</div>
-                                </div>
-                                <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded-lg">特價</span>
-                            </div>
-                            <div class="flex items-center justify-between bg-warm-100 rounded-xl p-1">
-                                <button onclick="changeQty(${p.id}, -1)" class="w-8 h-8 rounded-lg bg-white shadow-sm text-warm-800 hover:bg-brand-50 flex items-center justify-center font-bold text-base active:scale-95 transition">-</button>
-                                <input type="number" id="qty-input-${p.id}" value="0" min="0" onchange="manualQtyChange(${p.id}, this.value)" 
-                                       class="w-12 text-center bg-transparent font-bold text-warm-900 focus:outline-none text-sm">
-                                <button onclick="changeQty(${p.id}, 1)" class="w-8 h-8 rounded-lg bg-white shadow-sm text-warm-800 hover:bg-brand-50 flex items-center justify-center font-bold text-base active:scale-95 transition">+</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                if (p.category === 'joyce') {
-                    joyceContainer.innerHTML += cardHtml;
-                } else {
-                    hkContainer.innerHTML += cardHtml;
-                }
-            });
+      navigator.clipboard.writeText(txt).then(() => {
+        alert('統計文字已複製到剪貼簿！可直接貼至 LINE 群組。');
+      }).catch(() => {
+        alert('複製失敗，請手動複製。');
+      });
+    }
+
+    // Countdown Timer (Deadline: Nov 19, 15:00)
+    function startCountdown() {
+      // Set targeted year dynamically
+      const now = new Date();
+      let targetYear = now.getFullYear();
+      let targetDate = new Date(`${targetYear}/11/19 15:00:00`);
+
+      if (now > targetDate) {
+        // If already passed for current year, point to next year
+        targetDate = new Date(`${targetYear + 1}/11/19 15:00:00`);
+      }
+
+      function update() {
+        const current = new Date();
+        const diff = targetDate - current;
+
+        if (diff <= 0) {
+          document.getElementById('countdownText').innerText = '團購已截止';
+          return;
         }
 
-        function changeQty(productId, delta) {
-            const current = currentCart[productId] || 0;
-            const newQty = Math.max(0, current + delta);
-            if (newQty === 0) delete currentCart[productId];
-            else currentCart[productId] = newQty;
-            document.getElementById(`qty-input-${productId}`).value = newQty;
-            updateCartSummary();
-        }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / 1000 / 60) % 60);
 
-        function manualQtyChange(productId, val) {
-            const newQty = Math.max(0, parseInt(val) || 0);
-            if (newQty === 0) delete currentCart[productId];
-            else currentCart[productId] = newQty;
-            document.getElementById(`qty-input-${productId}`).value = newQty;
-            updateCartSummary();
-        }
+        let str = '';
+        if (days > 0) str += `${days}天 `;
+        str += `${hours}小時 ${mins}分`;
+        document.getElementById('countdownText').innerText = `剩餘 ${str}`;
+      }
 
-        function updateCartSummary() {
-            let totalQty = 0;
-            let totalPrice = 0;
-            for (const [pId, qty] of Object.entries(currentCart)) {
-                const prod = products.find(p => p.id === parseInt(pId));
-                if (prod) {
-                    totalQty += qty;
-                    totalPrice += qty * prod.price;
-                }
-            }
-            document.getElementById('cart-total-qty').innerText = totalQty;
-            document.getElementById('cart-total-price').innerText = totalPrice.toLocaleString();
-        }
+      update();
+      setInterval(update, 30000);
+    }
 
-        function submitOrder() {
-            const nameInput = document.getElementById('userName');
-            const name = nameInput.value.trim();
-
-            if (!name) {
-                showToast('請輸入訂購人姓名！', 'error');
-                nameInput.focus();
-                return;
-            }
-
-            const items = [];
-            let totalAmount = 0;
-            for (const [pId, qty] of Object.entries(currentCart)) {
-                if (qty > 0) {
-                    const prod = products.find(p => p.id === parseInt(pId));
-                    items.push({
-                        productId: prod.id,
-                        name: prod.name,
-                        price: prod.price,
-                        qty: qty,
-                        subtotal: qty * prod.price
-                    });
-                    totalAmount += qty * prod.price;
-                }
-            }
-
-            if (items.length === 0) {
-                showToast('請至少選擇一項商品數量！', 'warning');
-                return;
-            }
-
-            const newOrder = {
-                id: 'ORD-' + Date.now(),
-                name: name,
-                items: items,
-                totalAmount: totalAmount,
-                isPaid: false,
-                timestamp: new Date().toLocaleString('zh-TW', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })
-            };
-
-            orders.unshift(newOrder);
-            saveOrdersToStorage();
-
-            currentCart = {};
-            products.forEach(p => {
-                const input = document.getElementById(`qty-input-${p.id}`);
-                if (input) input.value = 0;
-            });
-            nameInput.value = '';
-            updateCartSummary();
-
-            showToast(`🎉 成功送出訂單！金額：$${totalAmount}`, 'success');
-            renderAllStatistics();
-        }
-
-        function renderAllStatistics() {
-            renderSummaryTable();
-            renderOrdersList();
-        }
-
-        function renderSummaryTable() {
-            const tbody = document.getElementById('summary-table-body');
-            tbody.innerHTML = '';
-            let grandQty = 0;
-            let grandAmount = 0;
-
-            const totals = {};
-            products.forEach(p => totals[p.id] = 0);
-
-            orders.forEach(order => {
-                order.items.forEach(item => {
-                    totals[item.productId] = (totals[item.productId] || 0) + item.qty;
-                });
-            });
-
-            products.forEach(p => {
-                const totalQty = totals[p.id] || 0;
-                const totalSubtotal = totalQty * p.price;
-                grandQty += totalQty;
-                grandAmount += totalSubtotal;
-
-                const row = document.createElement('tr');
-                row.className = totalQty > 0 ? 'bg-amber-50/40 font-medium' : 'hover:bg-gray-50 text-gray-500';
-                row.innerHTML = `
-                    <td class="p-3 font-bold ${totalQty > 0 ? 'text-warm-900' : 'text-gray-600'}">${p.name}</td>
-                    <td class="p-3 text-xs text-gray-500">${p.spec}</td>
-                    <td class="p-3 text-warm-800">$${p.price}</td>
-                    <td class="p-3 text-center">
-                        <span class="${totalQty > 0 ? 'bg-brand-500 text-white font-bold px-2.5 py-0.5 rounded-full' : 'text-gray-400'}">
-                            ${totalQty}
-                        </span>
-                    </td>
-                    <td class="p-3 text-right font-bold ${totalQty > 0 ? 'text-brand-600' : 'text-gray-400'}">
-                        $${totalSubtotal.toLocaleString()}
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            document.getElementById('grand-total-qty').innerText = `${grandQty} 份`;
-            document.getElementById('grand-total-amount').innerText = `$${grandAmount.toLocaleString()}`;
-        }
-
-        function renderOrdersList() {
-            const container = document.getElementById('orders-list-container');
-            container.innerHTML = '';
-            let paidSum = 0;
-            let allSum = 0;
-
-            if (orders.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-10 text-gray-400 border border-dashed border-gray-300 rounded-2xl bg-white">
-                        <i class="fa-solid fa-clipboard-list text-3xl mb-2 opacity-50"></i>
-                        <p>目前尚無任何訂單！</p>
-                    </div>
-                `;
-                document.getElementById('paid-amount-sum').innerText = '$0';
-                document.getElementById('all-amount-sum').innerText = '$0';
-                return;
-            }
-
-            orders.forEach(order => {
-                allSum += order.totalAmount;
-                if (order.isPaid) paidSum += order.totalAmount;
-
-                const card = document.createElement('div');
-                card.className = `bg-white rounded-2xl p-4 border transition ${order.isPaid ? 'border-emerald-200 bg-emerald-50/20' : 'border-warm-200 shadow-sm'}`;
-                card.innerHTML = `
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-lg">
-                                ${escapeHtml(order.name).charAt(0).toUpperCase()}
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-warm-900 text-base">${escapeHtml(order.name)}</span>
-                                    <span class="text-xs text-gray-400">${order.timestamp}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between sm:justify-end gap-4">
-                            <div class="text-right">
-                                <div class="text-xs text-gray-400">訂購金額</div>
-                                <div class="text-lg font-black text-brand-600">$${order.totalAmount.toLocaleString()}</div>
-                            </div>
-                            <button onclick="togglePayment('${order.id}')" 
-                                    class="px-3 py-1.5 rounded-xl font-bold text-xs transition flex items-center gap-1.5 border shadow-sm ${
-                                        order.isPaid 
-                                        ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700' 
-                                        : 'bg-white text-rose-600 border-rose-300 hover:bg-rose-50'
-                                    }">
-                                <i class="fa-solid ${order.isPaid ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
-                                ${order.isPaid ? '已付款' : '未付款'}
-                            </button>
-                            <button onclick="requestDeleteOrder('${order.id}')" class="text-gray-300 hover:text-red-500 p-1 transition" title="刪除此筆訂單 (需主購密碼)">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="mt-3 text-xs text-warm-800 bg-warm-50/60 p-2.5 rounded-xl flex flex-wrap gap-x-4 gap-y-1">
-                        ${order.items.map(i => `
-                            <span class="inline-flex items-center gap-1">
-                                <span class="font-medium">${i.name}</span>
-                                <span class="bg-warm-200 text-warm-900 px-1.5 py-0.2 rounded font-bold">x${i.qty}</span>
-                                <span class="text-gray-400">($${i.subtotal})</span>
-                            </span>
-                        `).join(' | ')}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-
-            document.getElementById('paid-amount-sum').innerText = `$${paidSum.toLocaleString()}`;
-            document.getElementById('all-amount-sum').innerText = `$${allSum.toLocaleString()}`;
-        }
-
-        // --- PASSWORD PROTECTION LOGIC ---
-        function requestDeleteOrder(orderId) {
-            pendingAction = () => {
-                orders = orders.filter(o => o.id !== orderId);
-                saveOrdersToStorage();
-                renderAllStatistics();
-                showToast('已刪除該筆訂單', 'info');
-            };
-            openPasswordModal();
-        }
-
-        function requestClearAll() {
-            if (orders.length === 0) {
-                showToast('目前沒有任何資料可供清空', 'warning');
-                return;
-            }
-            pendingAction = () => {
-                orders = [];
-                localStorage.removeItem('joyce_hk_group_orders');
-                renderAllStatistics();
-                showToast('已清空所有團購資料', 'info');
-            };
-            openPasswordModal();
-        }
-
-        function openPasswordModal() {
-            document.getElementById('admin-password-input').value = '';
-            document.getElementById('password-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('admin-password-input').focus(), 100);
-        }
-
-        function closePasswordModal() {
-            document.getElementById('password-modal').classList.add('hidden');
-            pendingAction = null;
-        }
-
-        function confirmAdminPassword() {
-            const inputPwd = document.getElementById('admin-password-input').value;
-            if (inputPwd === ADMIN_PASS) {
-                closePasswordModal();
-                if (pendingAction) {
-                    pendingAction();
-                    pendingAction = null;
-                }
-            } else {
-                showToast('密碼錯誤！無法執行主購操作', 'error');
-            }
-        }
-
-        function togglePayment(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (order) {
-                order.isPaid = !order.isPaid;
-                saveOrdersToStorage();
-                renderAllStatistics();
-                showToast(`已更新 ${order.name} 的付款狀態：${order.isPaid ? '已付款' : '未付款'}`, 'info');
-            }
-        }
-
-        function copySummaryText() {
-            if (orders.length === 0) {
-                showToast('目前尚無訂單可供複製！', 'warning');
-                return;
-            }
-            const totals = {};
-            products.forEach(p => totals[p.id] = 0);
-            let grandAmount = 0;
-            let grandQty = 0;
-
-            orders.forEach(order => {
-                order.items.forEach(item => {
-                    totals[item.productId] = (totals[item.productId] || 0) + item.qty;
-                });
-            });
-
-            let text = `【喬伊絲 & 香港淳珍 團購總統計】\n截止時間：11/19 15:00\n--------------------------\n📦 品項總備貨需求：\n`;
-            products.forEach(p => {
-                const q = totals[p.id] || 0;
-                if (q > 0) {
-                    text += `• ${p.name}: ${q} 份 ($${q * p.price})\n`;
-                    grandQty += q;
-                    grandAmount += q * p.price;
-                }
-            });
-            text += `--------------------------\n📊 總數量：${grandQty} 份\n💰 總金額：$${grandAmount.toLocaleString()} 元\n\n👤 團員下單明細：\n`;
-            orders.forEach(o => {
-                const itemsStr = o.items.map(i => `${i.name}x${i.qty}`).join(', ');
-                const status = o.isPaid ? '[已付]' : '[未付]';
-                text += `${status} ${o.name}: ${itemsStr} = $${o.totalAmount}\n`;
-            });
-
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            try {
-                document.execCommand('copy');
-                showToast('📋 已將團購統計結果複製至剪貼簿！', 'success');
-            } catch (err) {
-                showToast('複製失敗', 'error');
-            }
-            document.body.removeChild(textarea);
-        }
-
-        function exportCSV() {
-            if (orders.length === 0) {
-                showToast('尚無訂單資料可供匯出！', 'warning');
-                return;
-            }
-            let csvContent = "\uFEFF訂單時間,訂購人,付款狀態,總金額,訂購明細\n";
-            orders.forEach(o => {
-                const itemsStr = o.items.map(i => `${i.name}(${i.qty}份)`).join(';');
-                const paidStr = o.isPaid ? "已付款" : "未付款";
-                csvContent += `"${o.timestamp}","${o.name}","${paidStr}","${o.totalAmount}","${itemsStr}"\n`;
-            });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `團購統計明細_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('📊 已匯出 CSV Excel 檔！', 'success');
-        }
-
-        function saveOrdersToStorage() {
-            localStorage.setItem('joyce_hk_group_orders', JSON.stringify(orders));
-        }
-
-        function loadOrdersFromStorage() {
-            const saved = localStorage.getItem('joyce_hk_group_orders');
-            if (saved) {
-                try { orders = JSON.parse(saved); } catch (e) { orders = []; }
-            }
-            renderAllStatistics();
-        }
-
-        function startCountdown() {
-            const targetDate = new Date(new Date().getFullYear(), 10, 19, 15, 0, 0); // Nov 19 15:00
-            function update() {
-                const diff = targetDate - new Date();
-                if (diff <= 0) {
-                    document.getElementById('countdown').innerText = "⏰ 團購已截止下單";
-                    return;
-                }
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((diff / 1000 / 60) % 60);
-                const seconds = Math.floor((diff / 1000) % 60);
-                document.getElementById('countdown').innerText = `倒數 ${days > 0 ? days + '天 ' : ''}${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-            }
-            update();
-            setInterval(update, 1000);
-        }
-
-        function escapeHtml(str) {
-            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            let bgClass = "bg-warm-900 text-white";
-            if (type === 'success') bgClass = "bg-emerald-600 text-white";
-            if (type === 'error') bgClass = "bg-rose-600 text-white";
-            if (type === 'warning') bgClass = "bg-amber-500 text-white";
-
-            toast.className = `${bgClass} pointer-events-auto px-4 py-3 rounded-xl shadow-lg text-sm font-medium transition duration-300 transform translate-y-2 opacity-0 flex items-center justify-between gap-2`;
-            toast.innerHTML = `<span>${message}</span>`;
-            container.appendChild(toast);
-
-            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-                setTimeout(() => { if (container.contains(toast)) container.removeChild(toast); }, 300);
-            }, 3000);
-        }
-    </script>
+    // Initialize App
+    window.onload = function() {
+      initProducts();
+      saveAndRender();
+      startCountdown();
+    };
+  </script>
 </body>
 </html>
