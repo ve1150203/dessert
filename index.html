@@ -151,7 +151,6 @@
   </main>
 
   <script>
-    // 已綁定您的 Google Apps Script 雲端試算表 API
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycby-quN5c2iwOv1_zzxjXddfChrBZKUrnwZQiFIA_FoiqZlxAn1ejJ2ZNc5FvMqZbetrZw/exec";
     const ADMIN_PASS = '117117';
 
@@ -174,6 +173,8 @@
     function initProducts() {
       const joyceContainer = document.getElementById('joyceProducts');
       const hkContainer = document.getElementById('hkProducts');
+      joyceContainer.innerHTML = '';
+      hkContainer.innerHTML = '';
 
       products.forEach(p => {
         const cardHtml = `
@@ -222,7 +223,6 @@
       document.getElementById('currentTotal').innerText = total.toLocaleString();
     }
 
-    // Load Orders from Google Sheets via GAS
     async function loadOrders() {
       try {
         const res = await fetch(GAS_API_URL);
@@ -234,7 +234,6 @@
       }
     }
 
-    // Submit Order to Google Sheets
     async function handleFormSubmit(e) {
       e.preventDefault();
       const userName = document.getElementById('userName').value.trim();
@@ -291,7 +290,6 @@
       }
     }
 
-    // Toggle Paid Status (Admin Password Required)
     async function togglePaid(orderId) {
       const inputPass = prompt('請輸入主購密碼以切換付款狀態：');
       if (inputPass === null) return;
@@ -307,7 +305,6 @@
       loadOrders();
     }
 
-    // Delete Order (Admin Password Required)
     async function deleteOrder(orderId, userName) {
       const inputPass = prompt(`【主購權限驗證】\n要刪除「${userName}」這筆訂單，請輸入主購密碼：`);
       if (inputPass === null) return;
@@ -325,7 +322,6 @@
       }
     }
 
-    // Render Summary Table
     function renderSummaryTable() {
       const tbody = document.getElementById('summaryTableBody');
       tbody.innerHTML = '';
@@ -373,7 +369,6 @@
       document.getElementById('grandTotalAmount').innerText = grandAmt.toLocaleString();
     }
 
-    // Render Orders List
     function renderOrdersList() {
       const container = document.getElementById('ordersList');
       document.getElementById('orderCount').innerText = orders.length;
@@ -431,7 +426,6 @@
       });
     }
 
-    // Export CSV Helper
     function exportCSV() {
       if (orders.length === 0) {
         alert('目前沒有資料可供匯出');
@@ -450,7 +444,6 @@
       link.click();
     }
 
-    // Copy Text Summary
     function copySummaryText() {
       let txt = `📋【甜點伴手禮團購 預購總數統計】\n截止日期：11/19 下午 3:00\n------------------\n`;
       let grandQty = 0;
@@ -486,7 +479,6 @@
       });
     }
 
-    // Countdown Timer (Deadline: Nov 19, 15:00)
     function startCountdown() {
       const targetDate = new Date(`2026/11/19 15:00:00`);
       function update() {
