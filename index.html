@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>喬伊絲甜品 & 香港淳珍 辦公室聯合團購</title>
+  <title>欣雄開冰箱</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
@@ -234,6 +234,18 @@
       }
     }
 
+    async function postToGAS(payload) {
+      // 相容跨域 CORS 傳輸設定
+      return fetch(GAS_API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: JSON.stringify(payload)
+      });
+    }
+
     async function handleFormSubmit(e) {
       e.preventDefault();
       const userName = document.getElementById('userName').value.trim();
@@ -273,15 +285,12 @@
       };
 
       try {
-        await fetch(GAS_API_URL, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
+        await postToGAS(payload);
         alert(`下單成功！感謝 ${userName}，金額計 NT$ ${totalAmount.toLocaleString()} 元。`);
         document.getElementById('userName').value = '';
         products.forEach(p => document.getElementById(`qty_${p.id}`).value = 0);
         calcTotal();
-        loadOrders();
+        setTimeout(loadOrders, 1000); // 稍微緩衝 1 秒後載入最新明細
       } catch (err) {
         alert('送出失敗，請稍後重試');
       } finally {
@@ -298,11 +307,8 @@
         return;
       }
 
-      await fetch(GAS_API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'togglePaid', orderId: orderId })
-      });
-      loadOrders();
+      await postToGAS({ action: 'togglePaid', orderId: orderId });
+      setTimeout(loadOrders, 1000);
     }
 
     async function deleteOrder(orderId, userName) {
@@ -314,11 +320,8 @@
       }
 
       if (confirm(`確定要刪除「${userName}」這筆訂單嗎？`)) {
-        await fetch(GAS_API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'delete', orderId: orderId })
-        });
-        loadOrders();
+        await postToGAS({ action: 'delete', orderId: orderId });
+        setTimeout(loadOrders, 1000);
       }
     }
 
